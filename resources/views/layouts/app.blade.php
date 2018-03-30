@@ -27,9 +27,10 @@
     <link href="/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
     <link href="/plugins/animate.min.css" rel="stylesheet" type="text/css" />
     <link href="/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" />
+    <link href="/css/uploadfile.css" rel="stylesheet">
     <!-- END PLUGIN CSS -->
 
-    @if(session('user') || session('admin'))
+    @if(session('user'))
         <!-- BEGIN CORE CSS FRAMEWORK -->
         <link href="/css/webarch.css" rel="stylesheet" type="text/css" />
         <!-- END CORE CSS FRAMEWORK -->
@@ -44,9 +45,9 @@
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/jquery.dataTables.min.js"></script>
     <script src="/js/jquery.priceformat.min.js"></script>
-    {{-- <script src="/js/highcharts.js"></script> --}}
     <script src="/js/highstock.js"></script>
     <script src="/js/spin.min.js"></script>
+    <script src="/js/jquery.uploadfile.min.js"></script>
 
     <!-- Scripts -->
     <script>
