@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use DataTables;
 use Session;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use App\Product;
 use App\Category;
 use App\Gender;
@@ -20,9 +21,22 @@ class ProductController extends Controller
     }
 
     public function getList(){
-        $customers = Product::select(['Id', 'Name', 'Description', 'Price'])->orderBy('UpdatedDt', 'desc');
+        $client = new Client;
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'product/list', [
+                'query' => ['owner' => env('OWNER_ID', 1)]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
 
-        return Datatables::of($customers)->make();
+        if($responseData->isError == false){
+            $product = $responseData->isResponse->data;
+            return Datatables::of($product->product)->make();
+        } else{
+            return 'error';
+        }
+        //
+        // $customers = Product::select(['Id', 'Name', 'Description', 'Price'])->orderBy('UpdatedDt', 'desc');
+        //
+        // return Datatables::of($customers)->make();
     }
 
     public function addProduct(Request $request){
@@ -84,28 +98,40 @@ class ProductController extends Controller
     }
 
     public function getDetail($id, Request $request){
-        $userData = Session::get('user');
+        $client = new Client;
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'product/detail', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'productId' => $id]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
 
-        $product = Product::where('Id', $id)->where('_Owner', $userData['owner'])->get();
+        if($responseData->isError == false){
+            $product = $responseData->isResponse->data->detail;
 
-        if($product && count($product) > 0){
-            $gender = Gender::all();
-            $category = Category::all();
-
-            foreach($product as $product){
-                $product = array('name' => $product->Name, 'id' => $product->Id, 'description' => $product->Description, 'gender' => $product->_Gender, 'category' => $product->_Category, 'price' => $product->Price, 'status' => $product->Status);
-            }
-
-            $data = array(
-                'category' => $category,
-                'gender' => $gender,
-                'product' => $product,
-            );
-
-            return view('product.detail', $data);
+            $client = new Client;
+            $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/discount-type/get', [
+                    'query' => ['owner' => env('OWNER_ID', 1)]
+                ]);
+            $responseData = json_decode($response->getBody()->getContents());
+            $discountType = $responseData->isResponse->data;
         } else{
             return view('product.not-found');
         }
+
+        $gender = Gender::all();
+        $category = Category::all();
+
+        foreach($product as $product){
+            $product = array('name' => $product->Name, 'id' => $product->Id, 'description' => $product->Description, 'gender' => $product->Gender, 'category' => $product->Category, 'oldPrice' => $product->oldPrice, 'newPrice' => $product->newPrice, 'discountType' => $product->DiscountType, 'discount' => $product->Discount, 'status' => $product->Status);
+        }
+
+        $data = array(
+            'category' => $category,
+            'gender' => $gender,
+            'product' => $product,
+            'discountType' => $discountType
+        );
+
+        return view('product.detail', $data);
     }
 
     public function uploadFile(Request $request){
@@ -124,5 +150,31 @@ class ProductController extends Controller
         Storage::delete($filename);
     }
 
+    public function getPhotoDetail($id, Request $request){
+        $client = new Client;
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'product/detail/photo', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'productId' => $id]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
 
+        if($responseData->isError == false){
+            $photo = $responseData->isResponse->data->detail;
+
+            $client = new Client;
+            $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/color/get', [
+                    'query' => ['owner' => env('OWNER_ID', 1)]
+                ]);
+            $responseData = json_decode($response->getBody()->getContents());
+
+            $color = $responseData->isResponse->data;
+
+            $data = array(
+                'productId' => $id,
+                'photo' => $photo,
+                'color' => $color,
+            );
+
+            return view('product.photo-detail', $data);
+        }
+    }
 }

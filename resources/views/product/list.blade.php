@@ -30,7 +30,9 @@
         			<tr>
         				<th>Nama Produk</th>
         				<th>Deskripsi</th>
-                        <th>Harga</th>
+                        <th>Diskon</th>
+                        <th>Harga Awal</th>
+                        <th>Harga Akhir</th>
                         <th>Aksi</th>
         			</tr>
         		</thead>
@@ -51,7 +53,27 @@
             columns: [
                 { data: 'Name', name: 'Name' },
                 { data: 'Description', name: 'Description' },
-                { data: 'Price', name: 'Price' },
+                { data: 'Discount', name: 'Discount', render: function(data, type, full) {
+                        if(full.DiscountType != null){
+                            if(full.DiscountType == 'Percent'){
+                                return full.Discount+'%';
+                            } else if(full.DiscountType == 'Price'){
+                                data = data.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                                return 'Rp '+data;
+                            }
+                        }
+                    }
+                },
+                { data: 'oldPrice', name: 'oldPrice', render: function(data, type, full) {
+                        data = data.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                        return 'Rp '+data;
+                    }
+                },
+                { data: 'newPrice', name: 'newPrice', render: function(data, type, full) {
+                        data = data.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                        return 'Rp '+data;
+                    }
+                },
                 { data: 'Id', name: 'Id', orderable: false, render: function(data, type, full) {
                         return '<div class="text-center"><a href="/product/detail/'+data+'" class="btn-sm btn-success"><span class="fa fa-search"></span> Detail</a></div>';
                     }

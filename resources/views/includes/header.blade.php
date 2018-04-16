@@ -134,6 +134,24 @@
                        <span class="title">Stok</span>
                    </a>
                </li>
+
+               <li class="">
+                  <a href="javascript:;">
+                      <i class="fa fa-wrench"></i>
+                      <span class="title">Pengaturan</span>
+                      @if(\Request::is('report') || \Request::is('report/*'))
+                        <span class="arrow open"></span>
+                      @else
+                        <span class="arrow"></span>
+                      @endif
+                  </a>
+                  <ul class="sub-menu" @if(\Request::is('config') || \Request::is('config/*')) style="display: block;" @endif>
+                      <li @if(\Request::is('config/category') || \Request::is('config/category/*')) class="active" @endif><a href="/config/category">Kategori</a></li>
+                      <li @if(\Request::is('config/color') || \Request::is('config/color/*')) class="active" @endif><a href="/config/color">Warna</a></li>
+                      <li @if(\Request::is('config/size') || \Request::is('config/size/*')) class="active" @endif><a href="/config/size">Ukuran</a></li>
+                      <li @if(\Request::is('config/gender') || \Request::is('config/gender/*')) class="active" @endif><a href="/config/gender">Gender</a></li>
+                  </ul>
+              </li>
           </ul>
       </div>
   </div>

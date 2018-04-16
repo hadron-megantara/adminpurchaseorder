@@ -8,7 +8,19 @@
             <h3>Detail Produk</h3>
         </div>
 
-        <div class="col-md-12 pull-right" style="background-color:#ffffff;padding-top:20px">
+        <div class="col-md-12 pull-right" style="background-color:#ffffff;">
+            <div class="row">
+                <a href="/product/detail/{{$product['id']}}" class="col-md-6 text-center" style="background:#ffffff;border:solid 1px;border-bottom:none">
+                    <span class="" style="font-size:16px; font-weight:bold">Keterangan Produk</span>
+                </a>
+
+                <a href="/product/photo-detail/{{$product['id']}}" class="col-md-6 text-center" style="background:#DADADA;border:solid 1px">
+                    <span class="" style="font-size:16px; font-weight:bold">Foto Produk</span>
+                </a>
+            </div>
+
+            <div class="row clear" style="margin-bottom:30px"></div>
+
             <form class="form-horizontal" method="POST" action="{{ route('product.list.addProcess') }}" role="form" id="addForm" enctype="multipart/form-data">
                 {!! csrf_field() !!}
 
@@ -73,11 +85,59 @@
                 <div class="form-group">
                     <div class="col-md-2">&nbsp;</div>
 
-                    <label for="sendMaterialType" class="col-md-2 control-label">Harga</label>
+                    <label for="sendMaterialType" class="col-md-2 control-label">Harga Awal</label>
 
                     <div class="col-md-6">
-                        <input id="productPrice" type="text" class="form-control" required value="{{$product['price']}}"/>
-                        <input id="productPriceHidden" name="productPrice" type="hidden" value="{{$product['price']}}" />
+                        <input id="productPrice" type="text" class="form-control" required value="{{$product['oldPrice']}}"/>
+                        <input id="productPriceHidden" name="productPrice" type="hidden" value="{{$product['oldPrice']}}" />
+                    </div>
+
+                    <div class="col-md-2">&nbsp;</div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-2">&nbsp;</div>
+
+                    <label for="sendMaterialType" class="col-md-2 control-label">Diskon</label>
+
+                    <div class="col-md-6">
+                        <input type="checkbox" id="productIsDiscount" name="productIsDiscount" value="1" style="margin-top:11px" @if($product['discountType'] != null) checked @endif> Ya
+                    </div>
+
+                    <div class="col-md-2">&nbsp;</div>
+                </div>
+
+                <div class="form-group" id="discountArea">
+                    <div class="col-md-2">&nbsp;</div>
+
+                    <label for="sendMaterialType" class="col-md-2 control-label">Jumlah Diskon</label>
+
+                    <div class="col-md-6 row">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="productDiscountVal" @if($product['discountType'] != null) value="{{$product['discount']}}" @endif />
+                            <input type="hidden" class="form-control" name="productDiscountVal" id="productDiscountValHidden" @if($product['discountType'] != null) value="{{$product['discount']}}" @endif />
+                        </div>
+
+                        <div class="col-md-4">
+                            <select id="productDiscountType" name="productDiscountType" class="form-control" required>
+                                @foreach($discountType as $discountType2)
+                                    <option value="{{$discountType2->Type}}" @if($product['discountType'] == $discountType2->Type) selected @endif >{{$discountType2->Type}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">&nbsp;</div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-2">&nbsp;</div>
+
+                    <label for="sendMaterialType" class="col-md-2 control-label">Harga Akhir</label>
+
+                    <div class="col-md-6">
+                        <input id="productFinalPrice" type="text" class="form-control" required value="{{$product['newPrice']}}"/>
+                        <input id="productFinalPriceHidden" name="productFinalPrice" type="hidden" value="{{$product['newPrice']}}" />
                     </div>
 
                     <div class="col-md-2">&nbsp;</div>
@@ -113,7 +173,17 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-        $('#productPrice').priceFormat({
+        @if($product['discountType'] == null)
+            $('#discountArea').hide();
+        @elseif($product['discountType'] == 'Price')
+            $('#productDiscountVal').priceFormat({
+                prefix: 'Rp ',
+                centsLimit: 0,
+                thousandsSeparator: '.'
+            });
+        @endif
+
+        $('#productPrice, #productFinalPrice').priceFormat({
             prefix: 'Rp ',
             centsLimit: 0,
             thousandsSeparator: '.'
@@ -180,6 +250,45 @@
                 console.log('Error: ', error);
             };
         }
+
+        $('#productIsDiscount').click(function(){
+            if($(this).is(':checked')){
+                $('#discountArea').show();
+            } else{
+                $('#discountArea').hide();
+            }
+        });
+
+        $('#productDiscountVal').keyup(function(event){
+            if($('#productDiscountType').val() == 'Price'){
+                var number = $(this).val().split('.').join("");
+                number = number.replace(/Rp /gi,'');
+                $('#productDiscountValHidden').val(number);
+            } else{
+                $('#productDiscountValHidden').val($(this).val());
+            }
+        });
+
+        $('#productDiscountVal').keypress(function(event){
+            if($('#productDiscountType').val() == 'Price'){
+                $('#productDiscountVal').priceFormat({
+                    prefix: 'Rp ',
+                    centsLimit: 0,
+                    thousandsSeparator: '.'
+                });
+            } else if($('#productDiscountType').val() == 'Percent'){
+                $('#productDiscountVal').priceFormat({
+                    prefix: '',
+                    centsLimit: 0,
+                    thousandsSeparator: ''
+                });
+            }
+        });
+
+        $('#productDiscountType').change(function(){
+            $('#productDiscountVal').val('');
+            $('#productDiscountValHidden').val('');
+        });
 	});
 </script>
 
