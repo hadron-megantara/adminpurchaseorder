@@ -234,3 +234,19 @@ table.selectedItems tr td{
 .ajax-upload-dragdrop{
 	max-width:100%;
 }
+
+/* .modal {
+  opacity: 1;
+  margin:10%;
+}
+
+.modal.in .modal-dialog {
+  -webkit-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  -o-transform: translate(0, 0);
+  transform: translate(0, 0);
+}
+
+.modal-backdrop.in {
+  opacity: 0.5;
+} */
