@@ -31,6 +31,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/product/detail/{id}', 'ProductController@getDetail')->name('product.detail.get');
     Route::get('/product/photo-detail/{id}', 'ProductController@getPhotoDetail')->name('product.photoDetail.get');
 
+    Route::post('/product/image/upload', 'ProductController@imageUpload')->name('product.image.upload');
+
     Route::get('/config/category', 'ConfigController@category');
     Route::get('/config/category/get', 'ConfigController@getCategory')->name('config.category.get');
 

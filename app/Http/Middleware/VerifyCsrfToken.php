@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'product/detail/upload-file',
         'product/detail/remove-file',
+        'product/image/upload',
     ];
 }

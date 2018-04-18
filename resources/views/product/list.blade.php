@@ -25,10 +25,11 @@
         @endif
 
         <div class="table-responsive">
-        	<table id="customerTable" class="table-bordered" style="width: 100%">
+        	<table id="customerTable" class="table-bordered text-center" style="width: 100%">
         		<thead>
         			<tr>
         				<th>Nama Produk</th>
+                        <th>Kategori</th>
         				<th>Deskripsi</th>
                         <th>Diskon</th>
                         <th>Harga Awal</th>
@@ -52,16 +53,20 @@
             ajax: '{{ route('product.list.get') }}',
             columns: [
                 { data: 'Name', name: 'Name' },
+                { data: 'Category', name: 'Category' },
                 { data: 'Description', name: 'Description' },
-                { data: 'Discount', name: 'Discount', render: function(data, type, full) {
-                        if(full.DiscountType != null){
+                { data: 'Discount', render: function(data, type, full) {
+                        if(full.DiscountType != ''){
                             if(full.DiscountType == 'Percent'){
                                 return full.Discount+'%';
                             } else if(full.DiscountType == 'Price'){
+                                data = full.Discount;
                                 data = data.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
                                 return 'Rp '+data;
                             }
                         }
+
+                        return '-';
                     }
                 },
                 { data: 'oldPrice', name: 'oldPrice', render: function(data, type, full) {

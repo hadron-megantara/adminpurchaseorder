@@ -8,111 +8,184 @@
             <h3>Detail Produk</h3>
         </div>
 
-        <div class="col-md-12 pull-right" style="background-color:#ffffff;">
-            <div class="row">
-                <a href="/product/detail/{{$product['id']}}" class="col-md-6 text-center" style="background:#ffffff;border:solid 1px;border-bottom:none">
-                    <span class="" style="font-size:16px; font-weight:bold">Keterangan Produk</span>
-                </a>
+        <form class="form-horizontal" method="POST" action="{{ route('product.list.addProcess') }}" role="form" id="addForm" enctype="multipart/form-data">
+            {!! csrf_field() !!}
 
-                <a href="/product/photo-detail/{{$product['id']}}" class="col-md-6 text-center" style="background:#DADADA;border:solid 1px">
-                    <span class="" style="font-size:16px; font-weight:bold">Foto Produk</span>
-                </a>
-            </div>
+            <div class="col-md-12 pull-right" style="background-color:#ffffff;">
+                <div class="row clear"></div>
+                <div class="form-group">
+                    <div class='col-md-12'>
+                        <h4 style="font-weight:bold">#Informasi Produk</h4>
+                        <hr style="margin-top:-5px">
+                    </div>
 
-            <div class="row clear" style="margin-bottom:30px"></div>
+                    <label for="sendMaterialType" class="col-md-2 control-label">Gambar Produk</label>
 
-            <form class="form-horizontal" method="POST" action="{{ route('product.list.addProcess') }}" role="form" id="addForm" enctype="multipart/form-data">
-                {!! csrf_field() !!}
+                    <div class="col-md-10">
+                        <?php
+                            $countPhoto = 1;
+                            $selectedPhoto = 0;
+                            $selectedPhotoId = null;
+                        ?>
+
+                        <div id="imageListPreview" class="row form-group" style="margin-bottom:-20px">
+                            @foreach($photo as $photoData)
+                                <div class="col-md-2">
+                                    <select name="photoColor[]" class="form-control">
+                                        <option value="">Pilih Warna</option>
+                                        @foreach($color as $color2)
+                                            <option value="{{$color2->Id}}" @if($color2->Id == $photoData->_Color) selected @endif>{{$color2->Name}}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @if($photoData->Selected == 1)
+                                        <? $selectedPhotoId = $photoData->Id ?>
+                                        <img src="{{$photoData->Photo}}" class="photoClick" id="photoClick_{{$photoData->Id}}" style="width:100%;border:solid #86142B 2px;height:160px;cursor:pointer" />
+                                        <div class="text-center chosenPhoto" id="chosenPhoto_{{$photoData->Id}}" style="background-color:#ffffff;border:solid #86142B 2px;border-top:none">
+                                            <b style="color:#6B0D1F">Foto Utama</b>
+                                        </div>
+                                    @else
+                                        <img src="{{$photoData->Photo}}" class="photoClick" id="photoClick_{{$photoData->Id}}" style="width:100%;height:160px;cursor:pointer" />
+                                        <div class="text-center chosenPhoto" id="chosenPhoto_{{$photoData->Id}}" style="display:none;background-color:#ffffff;border:solid #86142B 2px;border-top:none">
+                                            <b style="color:#6B0D1F">Foto Utama</b>
+                                        </div>
+                                    @endif
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <btn class="btn btn-primary form-control" style="margin-top:0px;height:20px;width:30px;padding:0px;padding-left:4px"><span class="fa fa-pencil"></span></btn>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <btn class="btn btn-danger form-control" style="height:20px;width:30px;padding:0px;padding-left:4px;margin-right:0px;margin-left:7px"><span class="fa fa-trash"></span></btn>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if($countPhoto == 6)
+                                    <div class="row clear" style="margin-bottom:50px;"></div>
+                                    <?php $countPhoto = 0; ?>
+                                @endif
+
+                                <?php
+                                    $countPhoto++;
+
+                                    if($photoData->Selected == 1){
+                                        $selectedPhoto = $photoData->Id;
+                                    }
+                                ?>
+                            @endforeach
+
+                            <div id="hiddenImageArea" style="display:none">
+                                <div class="col-md-2" style="margin-bottom:20px;">
+                                    <select name="photoColor[]" class="form-control">
+                                        <option value="">Pilih Warna</option>
+                                        @foreach($color as $color2)
+                                            <option value="{{$color2->Id}}">{{$color2->Name}}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <img src="" class="photoClick" style="width:100%;height:160px;cursor:pointer" />
+                                    <div class="text-center chosenPhoto" style="display:none;background-color:#C5C4CA;border:solid #86142B 2px;border-top:none">
+                                        <b>Foto Utama</b>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <btn class="btn btn-primary form-control" style="margin-top:0px;height:20px;width:30px;padding:0px;padding-left:4px"><span class="fa fa-pencil"></span></btn>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <btn class="btn btn-danger form-control" style="height:20px;width:30px;padding:0px;padding-left:4px;margin-right:0px;margin-left:7px"><span class="fa fa-trash"></span></btn>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if($selectedPhotoId != null)
+                            <input type="hidden" value="{{$selectedPhotoId}}" name="wasSelectedPhotoId" />
+                        @endif
+
+                        <input type="hidden" id="selectedPhotoId" name="selectedPhotoId" />
+
+                        <div class="clear row"></div>
+                        <input type="file" id="productImage" class="form-control" style="display:none"/>
+                        <span id="btnProductImage">
+                            <button class="btn btn-success" style="margin-top:20px"><span class="fa fa-camera"></span> Tambah Gambar</button>
+                        </span>
+
+                        {{-- <input type="hidden" name="file_upload_list" id="file_upload_list">
+                        <div id="UploadFile" style="margin-top:-30px">Browse</div> --}}
+                    </div>
+                </div>
 
                 <div class="form-group">
-                    <div class="col-md-2">&nbsp;</div>
                     <label for="sendMaterialType" class="col-md-2 control-label">Nama Produk</label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <input id="productName" name="productName" type="text" class="form-control" required value="{{$product['name']}}" />
                     </div>
-                    <div class="col-md-2">&nbsp;</div>
                 </div>
 
                 <div class="form-group">
-                    <div class="col-md-2">&nbsp;</div>
-
-                    <label for="sendMaterialType" class="col-md-2 control-label">Deskripsi</label>
-
-                    <div class="col-md-6">
-                        <textarea id="productDescription" name="productDescription" rows="4" class="form-control" style="resize:none;" required>{{$product['description']}}</textarea>
-                    </div>
-
-                    <div class="col-md-2">&nbsp;</div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-2">&nbsp;</div>
-
-                    <label for="sendMaterialType" class="col-md-2 control-label">Gender</label>
-
-                    <div class="col-md-6">
-                        <select id="productGender" name="productGender" class="form-control" required>
-                            <option value="">--- Pilih Gender ---</option>
-
-                            @foreach($gender as $genderData)
-                                <option value="{{$genderData->Id}}" @if($product['gender'] == $genderData->Id) selected @endif >{{$genderData->Name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-2">&nbsp;</div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-2">&nbsp;</div>
-
                     <label for="sendMaterialType" class="col-md-2 control-label">Kategori</label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <select id="productCategory" name="productCategory" class="form-control" required>
                             <option value="">--- Pilih Kategori ---</option>
 
                             @foreach($category as $categoryData)
-                                <option value="{{$categoryData->Id}}" @if($product['category'] == $categoryData->Id) selected @endif >{{$categoryData->Name}}</option>
+                                <option value="{{$categoryData->Id}}" @if($product['categoryId'] == $categoryData->Id) selected @endif >{{$categoryData->Name}}</option>
                             @endforeach
                         </select>
                     </div>
-
-                    <div class="col-md-2">&nbsp;</div>
                 </div>
 
                 <div class="form-group">
-                    <div class="col-md-2">&nbsp;</div>
+                    <label for="sendMaterialType" class="col-md-2 control-label">Gender</label>
 
+                    <div class="col-md-10">
+                        <select id="productGender" name="productGender" class="form-control" required>
+                            <option value="">--- Pilih Gender ---</option>
+
+                            @foreach($gender as $genderData)
+                                <option value="{{$genderData->Id}}" @if($product['genderId'] == $genderData->Id) selected @endif >{{$genderData->Name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 pull-right" style="background-color:#ffffff;margin-top:20px">
+                <div class="row clear" style=""></div>
+
+                <div class='col-md-12'>
+                    <h4 style="font-weight:bold">#Harga</h4>
+                    <hr style="margin-top:-5px">
+                </div>
+
+                <div class="form-group">
                     <label for="sendMaterialType" class="col-md-2 control-label">Harga Awal</label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <input id="productPrice" type="text" class="form-control" required value="{{$product['oldPrice']}}"/>
                         <input id="productPriceHidden" name="productPrice" type="hidden" value="{{$product['oldPrice']}}" />
                     </div>
-
-                    <div class="col-md-2">&nbsp;</div>
                 </div>
 
                 <div class="form-group">
-                    <div class="col-md-2">&nbsp;</div>
-
                     <label for="sendMaterialType" class="col-md-2 control-label">Diskon</label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <input type="checkbox" id="productIsDiscount" name="productIsDiscount" value="1" style="margin-top:11px" @if($product['discountType'] != null) checked @endif> Ya
                     </div>
-
-                    <div class="col-md-2">&nbsp;</div>
                 </div>
 
                 <div class="form-group" id="discountArea">
-                    <div class="col-md-2">&nbsp;</div>
-
                     <label for="sendMaterialType" class="col-md-2 control-label">Jumlah Diskon</label>
 
-                    <div class="col-md-6 row">
+                    <div class="col-md-10 row">
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="productDiscountVal" @if($product['discountType'] != null) value="{{$product['discount']}}" @endif />
                             <input type="hidden" class="form-control" name="productDiscountVal" id="productDiscountValHidden" @if($product['discountType'] != null) value="{{$product['discount']}}" @endif />
@@ -126,48 +199,44 @@
                             </select>
                         </div>
                     </div>
-
-                    <div class="col-md-2">&nbsp;</div>
                 </div>
 
                 <div class="form-group">
-                    <div class="col-md-2">&nbsp;</div>
-
                     <label for="sendMaterialType" class="col-md-2 control-label">Harga Akhir</label>
 
-                    <div class="col-md-6">
-                        <input id="productFinalPrice" type="text" class="form-control" required value="{{$product['newPrice']}}"/>
+                    <div class="col-md-10">
+                        <input id="productFinalPrice" type="text" class="form-control" required value="{{$product['newPrice']}}" disabled/>
                         <input id="productFinalPriceHidden" name="productFinalPrice" type="hidden" value="{{$product['newPrice']}}" />
                     </div>
+                </div>
+            </div>
 
-                    <div class="col-md-2">&nbsp;</div>
+            <div class="col-md-12 pull-right" style="background-color:#ffffff;margin-top:20px">
+                <div class="row clear" style=""></div>
+
+                <div class='col-md-12'>
+                    <h4 style="font-weight:bold">#Deskripsi Produk</h4>
+                    <hr style="margin-top:-5px">
                 </div>
 
                 <div class="form-group">
-                    <div class="col-md-2">&nbsp;</div>
+                    <label for="sendMaterialType" class="col-md-2 control-label">Deskripsi</label>
 
-                    <label for="sendMaterialType" class="col-md-2 control-label">Gambar</label>
-
-                    <div class="col-md-6">
-                        <input type="hidden" name="file_upload_list" id="file_upload_list">
-                        <div id="UploadFile">Browse</div>
+                    <div class="col-md-10">
+                        <textarea id="productDescription" name="productDescription" rows="4" class="form-control" style="resize:none;" required>{{$product['description']}}</textarea>
                     </div>
-
-                    <div class="col-md-2">&nbsp;</div>
                 </div>
+            </div>
 
+            <div class="col-md-12 pull-right" style="background-color:#ffffff;margin-top:20px;margin-bottom:20px">
                 <div class="form-group">
-                    <div class="col-md-2">&nbsp;</div>
-
-                    <div class="col-md-8 text-right">
+                    <div class="col-md-12 text-right" style="margin-top:20px">
                         <a href="/product/list" type="button" class="btn btn-default"><span class="fa fa-close"></span> Batal</a>
                         <button type="submit" class="btn btn-success" form="addForm"><span class="fa fa-save"></span> Simpan</button>
                     </div>
-
-                    <div class="col-md-2">&nbsp;</div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -193,6 +262,8 @@
             var number = $(this).val().split('.').join("");
             number = number.replace(/Rp /gi,'');
             $('#productPriceHidden').val(number);
+
+            calculateFinalPrice();
         });
 
         $("#UploadFile").uploadFile({
@@ -260,13 +331,11 @@
         });
 
         $('#productDiscountVal').keyup(function(event){
-            if($('#productDiscountType').val() == 'Price'){
-                var number = $(this).val().split('.').join("");
-                number = number.replace(/Rp /gi,'');
-                $('#productDiscountValHidden').val(number);
-            } else{
-                $('#productDiscountValHidden').val($(this).val());
-            }
+            var number = $(this).val().split('.').join("");
+            number = number.replace(/Rp /gi,'');
+            $('#productDiscountValHidden').val(number);
+
+            calculateFinalPrice();
         });
 
         $('#productDiscountVal').keypress(function(event){
@@ -288,6 +357,79 @@
         $('#productDiscountType').change(function(){
             $('#productDiscountVal').val('');
             $('#productDiscountValHidden').val('');
+            $('#productFinalPrice').val($('#productPrice').val());
+            $('#productFinalPriceHidden').val($('#productPriceHidden').val());
+        });
+
+        function calculateFinalPrice(){
+            $('#productDiscountValHidden').val();
+            $('#productDiscountType').val();
+            $('#productFinalPrice').val();
+            $('#productFinalPriceHidden').val();
+
+            var price = $('#productPriceHidden').val();
+            var discount = $('#productDiscountValHidden').val();
+            if($('#productDiscountType').val() == 'Price'){
+                price = price - discount;
+                $('#productFinalPriceHidden').val(price);
+                $('#productFinalPrice').val(price);
+            } else if($('#productDiscountType').val() == 'Percent'){
+                discount = price * discount/100;
+                price = price - discount;
+                $('#productFinalPriceHidden').val(price);
+                $('#productFinalPrice').val(price);
+            }
+
+            $('#productPrice, #productFinalPrice').priceFormat({
+                prefix: 'Rp ',
+                centsLimit: 0,
+                thousandsSeparator: '.'
+            });
+        }
+
+        $(document).on('click', "img.photoClick", function() {
+            $( ".photoClick" ).each(function( index ) {
+                $(this).css({'border': 'none'});
+            });
+
+            $( ".chosenPhoto" ).each(function( index ) {
+                $(this).hide();
+            });
+
+            var id = this.id;
+            id = id.substring(11);
+            $(this).css({'border': 'solid #86142B 2px'});
+            $('#chosenPhoto_'+id).show();
+            $('#selectedPhotoId').val(id);
+        });
+
+        $('#btnProductImage').click(function(){
+            $('#productImage').click();
+            return false;
+        });
+
+        var newImage = 1;
+        $('#productImage').change(function(e){
+            if (this.files && this.files[0]) {
+                var formData = new FormData();
+                formData.append("file", this.files[0]);
+                $.ajax({
+    		        type: "POST",
+    		        url: "/product/image/upload",
+                    data: formData,
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+    		        success: function(data) {
+                        $('#hiddenImageArea .photoClick').attr('src', "{{url('/')}}/storage/app/"+data);
+                        $('#hiddenImageArea .photoClick').attr('id', 'photoClick_new'+newImage);
+                        $('#hiddenImageArea .chosenPhoto').attr('id', 'chosenPhoto_new'+newImage);
+                        newImage++;
+                        $('#imageListPreview').append($('#hiddenImageArea').html());
+    		        }
+    		    });
+            }
         });
 	});
 </script>

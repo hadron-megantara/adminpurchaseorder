@@ -36,6 +36,7 @@
             <?php
                 $countPhoto = 1;
                 $selectedPhoto = 0;
+                $selectedPhotoId = null;
             ?>
 
             @foreach($photo as $photoData)
@@ -48,10 +49,27 @@
                     </select>
 
                     @if($photoData->Selected == 1)
+                        <? $selectedPhotoId = $photoData->Id ?>
                         <img src="{{$photoData->Photo}}" class="photoClick" id="photoClick_{{$photoData->Id}}" style="width:100%;border:solid red 2px" />
+                        <div class="text-center chosenPhoto" id="chosenPhoto_{{$photoData->Id}}" style="background-color:#C5C4CA;border:solid red 2px;border-top:none">
+                            <b>Foto Utama</b>
+                        </div>
                     @else
                         <img src="{{$photoData->Photo}}" class="photoClick" id="photoClick_{{$photoData->Id}}" style="width:100%;" />
+                        <div class="text-center chosenPhoto" id="chosenPhoto_{{$photoData->Id}}" style="display:none;background-color:#C5C4CA;border:solid red 2px;border-top:none">
+                            <b>Foto Utama</b>
+                        </div>
                     @endif
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <btn class="btn btn-primary form-control" style="margin-top:0px"><span class="fa fa-pencil"></span> Ubah</btn>
+                        </div>
+
+                        <div class="col-md-6">
+                            <btn class="btn btn-danger form-control"><span class="fa fa-trash"></span> Hapus</btn>
+                        </div>
+                    </div>
                 </div>
 
                 @if($countPhoto == 3)
@@ -63,10 +81,16 @@
                     $countPhoto++;
 
                     if($photoData->Selected == 1){
-                        $selectedPhoto = $photoData->Id
+                        $selectedPhoto = $photoData->Id;
                     }
                 ?>
             @endforeach
+
+            @if($selectedPhotoId != null)
+                <input type="text" value="{{$selectedPhotoId}}" name="wasSelectedPhotoId" />
+            @endif
+
+            <input type="text" id="selectedPhotoId" name="selectedPhotoId" />
         </div>
     </div>
 </div>
@@ -78,7 +102,16 @@
                 $(this).css({'border': 'none'});
             });
 
+            $( ".chosenPhoto" ).each(function( index ) {
+                $(this).hide();
+            });
+
+            var id = this.id;
+            id = id.substring(11);
+
             $(this).css({'border': 'solid red 2px'});
+            $('#chosenPhoto_'+id).show();
+            $('#selectedPhotoId').val(id);
         });
 	});
 </script>

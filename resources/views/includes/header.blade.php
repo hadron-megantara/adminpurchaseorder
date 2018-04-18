@@ -135,6 +135,13 @@
                    </a>
                </li>
 
+               <li @if(\Request::is('order') || \Request::is('order/*')) class="active" @endif>
+                   <a href="/order/list">
+                       <i class="fa fa-bag"></i>
+                       <span class="title">Pemesanan</span>
+                   </a>
+               </li>
+
                <li class="">
                   <a href="javascript:;">
                       <i class="fa fa-wrench"></i>

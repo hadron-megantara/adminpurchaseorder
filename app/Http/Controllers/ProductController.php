@@ -28,15 +28,12 @@ class ProductController extends Controller
         $responseData = json_decode($response->getBody()->getContents());
 
         if($responseData->isError == false){
-            $product = $responseData->isResponse->data;
-            return Datatables::of($product->product)->make();
+            $product = $responseData->isResponse->data->product;
+
+            return Datatables::of($product)->make();
         } else{
             return 'error';
         }
-        //
-        // $customers = Product::select(['Id', 'Name', 'Description', 'Price'])->orderBy('UpdatedDt', 'desc');
-        //
-        // return Datatables::of($customers)->make();
     }
 
     public function addProduct(Request $request){
@@ -121,14 +118,33 @@ class ProductController extends Controller
         $category = Category::all();
 
         foreach($product as $product){
-            $product = array('name' => $product->Name, 'id' => $product->Id, 'description' => $product->Description, 'gender' => $product->Gender, 'category' => $product->Category, 'oldPrice' => $product->oldPrice, 'newPrice' => $product->newPrice, 'discountType' => $product->DiscountType, 'discount' => $product->Discount, 'status' => $product->Status);
+            $product = array('name' => $product->Name, 'id' => $product->Id, 'description' => $product->Description, 'gender' => $product->Gender, 'genderId' => $product->GenderId, 'category' => $product->Category, 'categoryId' => $product->CategoryId, 'oldPrice' => $product->oldPrice, 'newPrice' => $product->newPrice, 'discountType' => $product->DiscountType, 'discount' => $product->Discount, 'status' => $product->Status);
+        }
+
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'product/detail/photo', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'productId' => $id]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            $photo = $responseData->isResponse->data->detail;
+
+            $client = new Client;
+            $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/color/get', [
+                    'query' => ['owner' => env('OWNER_ID', 1)]
+                ]);
+            $responseData = json_decode($response->getBody()->getContents());
+
+            $color = $responseData->isResponse->data;
         }
 
         $data = array(
             'category' => $category,
             'gender' => $gender,
             'product' => $product,
-            'discountType' => $discountType
+            'discountType' => $discountType,
+            'color' => $color,
+            'photo' => $photo,
         );
 
         return view('product.detail', $data);
@@ -150,31 +166,14 @@ class ProductController extends Controller
         Storage::delete($filename);
     }
 
-    public function getPhotoDetail($id, Request $request){
-        $client = new Client;
-        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'product/detail/photo', [
-                'query' => ['owner' => env('OWNER_ID', 1), 'productId' => $id]
-            ]);
-        $responseData = json_decode($response->getBody()->getContents());
+    public function imageUpload(Request $request){
+        if($request->file('file')->isValid()){
+            $userData = Session::get('user');
 
-        if($responseData->isError == false){
-            $photo = $responseData->isResponse->data->detail;
-
-            $client = new Client;
-            $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/color/get', [
-                    'query' => ['owner' => env('OWNER_ID', 1)]
-                ]);
-            $responseData = json_decode($response->getBody()->getContents());
-
-            $color = $responseData->isResponse->data;
-
-            $data = array(
-                'productId' => $id,
-                'photo' => $photo,
-                'color' => $color,
-            );
-
-            return view('product.photo-detail', $data);
+            $uploadedFile = $request->file('file');
+            $uploadedFile = $uploadedFile->store('images/'.$userData['owner'].'/temp');
+            $uploadedFile = str_replace('"', '', $uploadedFile);
+            echo $uploadedFile;die;
         }
     }
 }
