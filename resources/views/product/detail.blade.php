@@ -28,7 +28,7 @@
                             $selectedPhotoId = null;
                         ?>
 
-                        <div id="imageListPreview" class="row form-group" style="margin-bottom:-20px">
+                        <div id="imageListPreview" class="row form-group">
                             @foreach($photo as $photoData)
                                 <div class="col-md-2">
                                     <select name="photoColor[]" class="form-control">
@@ -63,7 +63,7 @@
                                 </div>
 
                                 @if($countPhoto == 6)
-                                    <div class="row clear" style="margin-bottom:50px;"></div>
+                                    <div class="row clear" style="margin-bottom:20px;"></div>
                                     <?php $countPhoto = 0; ?>
                                 @endif
 
@@ -77,7 +77,7 @@
                             @endforeach
 
                             <div id="hiddenImageArea" style="display:none">
-                                <div class="col-md-2" style="margin-bottom:20px;">
+                                <div class="col-md-2" style="margin-bottom:10px;">
                                     <select name="photoColor[]" class="form-control">
                                         <option value="">Pilih Warna</option>
                                         @foreach($color as $color2)
@@ -112,7 +112,7 @@
                         <div class="clear row"></div>
                         <input type="file" id="productImage" class="form-control" style="display:none"/>
                         <span id="btnProductImage">
-                            <button class="btn btn-success" style="margin-top:20px"><span class="fa fa-camera"></span> Tambah Gambar</button>
+                            <button class="btn btn-success" style="margin-top:-10px"><span class="fa fa-camera"></span> Tambah Gambar</button>
                         </span>
 
                         {{-- <input type="hidden" name="file_upload_list" id="file_upload_list">
@@ -409,6 +409,7 @@
         });
 
         var newImage = 1;
+        var countPhoto = {{$countPhoto}};
         $('#productImage').change(function(e){
             if (this.files && this.files[0]) {
                 var formData = new FormData();
@@ -427,6 +428,15 @@
                         $('#hiddenImageArea .chosenPhoto').attr('id', 'chosenPhoto_new'+newImage);
                         newImage++;
                         $('#imageListPreview').append($('#hiddenImageArea').html());
+                        $('#hiddenImageArea .photoClick').attr('id', '');
+                        $('#hiddenImageArea .chosenPhoto').attr('id', '');
+
+                        if(countPhoto == 6){
+                            $('#imageListPreview').append('<div class="row clear" style="margin-bottom:20px;"></div>');
+                            countPhoto = 0;
+                        }
+
+                        countPhoto++;
     		        }
     		    });
             }

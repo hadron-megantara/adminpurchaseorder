@@ -63,6 +63,8 @@
 
     <!-- BEGIN CORE JS FRAMEWORK-->
     <script src="/plugins/pace/pace.min.js" type="text/javascript"></script>
+    <!-- END CORE JS FRAMEWORK -->
+
     <!-- BEGIN JS DEPENDECENCIES-->
     <script src="/plugins/jquery-block-ui/jqueryblockui.min.js" type="text/javascript"></script>
     <script src="/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script>
@@ -70,8 +72,8 @@
     <script src="/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
     <script src="/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
     <script src="/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>
-
     <!-- END CORE JS DEPENDECENCIES-->
+
     <!-- BEGIN CORE TEMPLATE JS -->
     <script src="/js/webarch.js" type="text/javascript"></script>
     <!-- END CORE TEMPLATE JS -->

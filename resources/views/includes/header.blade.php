@@ -137,16 +137,32 @@
 
                <li @if(\Request::is('order') || \Request::is('order/*')) class="active" @endif>
                    <a href="/order/list">
-                       <i class="fa fa-bag"></i>
+                       <i class="fa fa-shopping-cart"></i>
                        <span class="title">Pemesanan</span>
                    </a>
                </li>
 
                <li class="">
                   <a href="javascript:;">
-                      <i class="fa fa-wrench"></i>
-                      <span class="title">Pengaturan</span>
+                      <i class="fa fa-line-chart"></i>
+                      <span class="title">Report</span>
                       @if(\Request::is('report') || \Request::is('report/*'))
+                        <span class="arrow open"></span>
+                      @else
+                        <span class="arrow"></span>
+                      @endif
+                  </a>
+                  <ul class="sub-menu" @if(\Request::is('report') || \Request::is('report/*')) style="display: block;" @endif>
+                      <li @if(\Request::is('report/month') || \Request::is('report/month/*')) class="active" @endif><a href="/report/month">Penjualan - Bulanan</a></li>
+                      <li @if(\Request::is('report/year') || \Request::is('report/year/*')) class="active" @endif><a href="/report/year">Penjualan - Tahunan</a></li>
+                  </ul>
+              </li>
+
+               <li class="">
+                  <a href="javascript:;">
+                      <i class="fa fa-cogs"></i>
+                      <span class="title">Pengaturan</span>
+                      @if(\Request::is('config') || \Request::is('config/*'))
                         <span class="arrow open"></span>
                       @else
                         <span class="arrow"></span>
