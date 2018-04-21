@@ -27,6 +27,48 @@ class ConfigController extends Controller
         }
     }
 
+    public function addCategory(Request $request){
+        $client = new Client;
+        $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/category/add', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'category' => $request->category]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            return redirect('/config/category')->with('success', 'Sukses menambah kategori');
+        } else{
+            return redirect('/config/category')->with('error', 'Gagal menambah kategori');
+        }
+    }
+
+    public function editCategory(Request $request){
+        $client = new Client;
+        $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/category/edit', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'categoryId' => $request->categoryId, 'category' => $request->category]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            return redirect('/config/category')->with('success', 'Sukses mengubah kategori');
+        } else{
+            return redirect('/config/category')->with('error', 'Gagal mengubah kategori');
+        }
+    }
+
+    public function deleteCategory(Request $request){
+        $client = new Client;
+        $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/category/delete', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'categoryId' => $request->categoryId]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            return redirect('/config/category')->with('success', 'Sukses menghapus kategori');
+        } else{
+            return redirect('/config/category')->with('error', 'Gagal menghapus kategori');
+        }
+    }
+
     public function color(Request $request){
         return view('config.color');
     }
@@ -43,6 +85,48 @@ class ConfigController extends Controller
             return Datatables::of($color)->make();
         } else{
             return 'error';
+        }
+    }
+
+    public function addColor(Request $request){
+        $client = new Client;
+        $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/color/add', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'color' => $request->color]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            return redirect('/config/color')->with('success', 'Sukses menambah warna');
+        } else{
+            return redirect('/config/color')->with('error', 'Gagal menambah warna');
+        }
+    }
+
+    public function editColor(Request $request){
+        $client = new Client;
+        $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/color/edit', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'colorId' => $request->colorId, 'color' => $request->color]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            return redirect('/config/color')->with('success', 'Sukses mengubah warna');
+        } else{
+            return redirect('/config/color')->with('error', 'Gagal mengubah warna');
+        }
+    }
+
+    public function deleteColor(Request $request){
+        $client = new Client;
+        $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/color/delete', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'colorId' => $request->colorId]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            return redirect('/config/color')->with('success', 'Sukses menghapus warna');
+        } else{
+            return redirect('/config/color')->with('error', 'Gagal menghapus warna');
         }
     }
 

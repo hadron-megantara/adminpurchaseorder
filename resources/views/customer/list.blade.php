@@ -8,7 +8,7 @@
             <h3>List Customer</h3>
         </div>
 
-        <div class="row">
+        <div class="col-md-12" style="background-color:#ffffff;padding-top:30px">
             <div class="table-responsive">
             	<table id="customerTable" class="table-bordered" style="width: 100%">
             		<thead>

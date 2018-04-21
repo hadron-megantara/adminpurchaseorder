@@ -24,22 +24,24 @@
             </div>
         @endif
 
-        <div class="table-responsive">
-        	<table id="customerTable" class="table-bordered text-center" style="width: 100%">
-        		<thead>
-        			<tr>
-        				<th>Nama Produk</th>
-                        <th>Kategori</th>
-        				<th>Deskripsi</th>
-                        <th>Diskon</th>
-                        <th>Harga Awal</th>
-                        <th>Harga Akhir</th>
-                        <th>Aksi</th>
-        			</tr>
-        		</thead>
-        		<tbody>
-        		</tbody>
-        	</table>
+        <div class="col-md-12" style="background-color:#ffffff;padding-top:30px">
+            <div class="table-responsive">
+            	<table id="customerTable" class="table-bordered text-center" style="width: 100%">
+            		<thead>
+            			<tr>
+            				<th>Nama Produk</th>
+                            <th>Kategori</th>
+            				<th>Deskripsi</th>
+                            <th>Diskon</th>
+                            <th>Harga Awal</th>
+                            <th>Harga Akhir</th>
+                            <th>Aksi</th>
+            			</tr>
+            		</thead>
+            		<tbody>
+            		</tbody>
+            	</table>
+            </div>
         </div>
     </div>
 </div>

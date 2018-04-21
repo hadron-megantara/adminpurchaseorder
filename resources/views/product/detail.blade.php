@@ -423,6 +423,7 @@
                     contentType: false,
                     processData: false,
     		        success: function(data) {
+                        console.log(data);
                         $('#hiddenImageArea .photoClick').attr('src', "{{url('/')}}/storage/app/"+data);
                         $('#hiddenImageArea .photoClick').attr('id', 'photoClick_new'+newImage);
                         $('#hiddenImageArea .chosenPhoto').attr('id', 'chosenPhoto_new'+newImage);

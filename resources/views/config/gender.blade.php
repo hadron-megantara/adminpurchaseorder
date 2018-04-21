@@ -5,7 +5,7 @@
 <div class="page-content">
     <div class="content">
         <div class="page-title">
-            <h3>Pengaturan - Gender</h3>
+            <h3>Master - Gender</h3>
         </div>
 
         <div class="row">
@@ -14,7 +14,6 @@
             		<thead>
             			<tr>
             				<th>Gender</th>
-            				<th class="actions-column">Aksi</th>
             			</tr>
             		</thead>
             		<tbody>
@@ -33,11 +32,7 @@
             aaSorting: [],
             ajax: '{{ route('config.gender.get') }}',
             columns: [
-                { data: 'Name', name: 'name' },
-                { data: 'id', name: 'id', orderable: false, render: function(data, type, full) {
-                        return '<div class="text-center"><a class="btn btn-primary editColorBtn" id="edit_'+data+'" href="#colorModalEdit" data-toggle="modal"id="edit_'+data+'" ><span class="fa fa-pencil"></span></a> </div><input type="hidden" id="colorName_'+data+'" value="'+full.Name+'" />';
-                    }
-                }
+                { data: 'Name', name: 'name' }
             ],
             "oLanguage": {
                 "sProcessing": "Memproses...",

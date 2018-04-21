@@ -25,19 +25,24 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/product/list/add-process', 'ProductController@addProductProcess')->name('product.list.addProcess');
     Route::post('/product/list/update', 'ProductController@updateProduct')->name('product.list.update');
     Route::post('/product/list/delete', 'ProductController@deleteProduct')->name('product.list.delete');
-    Route::post('/product/detail/upload-file', 'ProductController@uploadFile')->name('product.detail.uploadFile');
-    Route::post('/product/detail/remove-file', 'ProductController@removeFile')->name('product.detail.removeFile');
 
     Route::get('/product/detail/{id}', 'ProductController@getDetail')->name('product.detail.get');
     Route::get('/product/photo-detail/{id}', 'ProductController@getPhotoDetail')->name('product.photoDetail.get');
 
     Route::post('/product/image/upload', 'ProductController@imageUpload')->name('product.image.upload');
+    Route::post('/product/image/remove', 'ProductController@remove')->name('product.image.remove');
 
     Route::get('/config/category', 'ConfigController@category');
     Route::get('/config/category/get', 'ConfigController@getCategory')->name('config.category.get');
+    Route::post('/config/category/add', 'ConfigController@addCategory')->name('config.category.add');
+    Route::post('/config/category/edit', 'ConfigController@editCategory')->name('config.category.edit');
+    Route::post('/config/category/delete', 'ConfigController@deleteCategory')->name('config.category.delete');
 
     Route::get('/config/color', 'ConfigController@color');
     Route::get('/config/color/get', 'ConfigController@getColor')->name('config.color.get');
+    Route::post('/config/color/add', 'ConfigController@addColor')->name('config.color.add');
+    Route::post('/config/color/edit', 'ConfigController@editColor')->name('config.color.edit');
+    Route::post('/config/color/delete', 'ConfigController@deleteColor')->name('config.color.delete');
 
     Route::get('/config/size', 'ConfigController@size');
     Route::get('/config/size/get', 'ConfigController@getSize')->name('config.size.get');

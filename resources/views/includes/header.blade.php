@@ -161,7 +161,7 @@
                <li class="">
                   <a href="javascript:;">
                       <i class="fa fa-cogs"></i>
-                      <span class="title">Pengaturan</span>
+                      <span class="title">Master</span>
                       @if(\Request::is('config') || \Request::is('config/*'))
                         <span class="arrow open"></span>
                       @else
