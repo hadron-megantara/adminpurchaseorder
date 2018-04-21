@@ -35,8 +35,14 @@ class ProductController extends Controller
             $limitStart = $request->start;
         }
 
+        $search = null;
+        if($request->has('search') && $request->search != ''){
+            $search = $request->search;
+            $search = $search['value'];
+        }
+
         $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'product/list', [
-                'query' => ['owner' => env('OWNER_ID', 1), 'limit' => $limit, 'limitStart' => $limitStart]
+                'query' => ['owner' => env('OWNER_ID', 1), 'limit' => $limit, 'limitStart' => $limitStart, 'name' => $search]
             ]);
         $responseData = json_decode($response->getBody()->getContents());
 
