@@ -11,8 +11,7 @@
         <form class="form-horizontal" method="POST" action="{{ route('product.list.addProcess') }}" role="form" id="addForm" enctype="multipart/form-data">
             {!! csrf_field() !!}
 
-            <div class="col-md-12 pull-right" style="background-color:#ffffff;">
-                <div class="row clear"></div>
+            <div class="col-md-12" style="background-color:#ffffff;">
                 <div class="form-group">
                     <div class='col-md-12'>
                         <h4 style="font-weight:bold">#Informasi Produk</h4>
@@ -29,55 +28,8 @@
                         ?>
 
                         <div id="imageListPreview" class="row form-group">
-                            @foreach($photo as $photoData)
-                                <div class="col-md-2">
-                                    <select name="photoColor[]" class="form-control">
-                                        <option value="">Pilih Warna</option>
-                                        @foreach($color as $color2)
-                                            <option value="{{$color2->Id}}" @if($color2->Id == $photoData->_Color) selected @endif>{{$color2->Name}}</option>
-                                        @endforeach
-                                    </select>
-
-                                    @if($photoData->Selected == 1)
-                                        <? $selectedPhotoId = $photoData->Id ?>
-                                        <img src="{{$photoData->Photo}}" class="photoClick" id="photoClick_{{$photoData->Id}}" style="width:100%;border:solid #86142B 2px;height:160px;cursor:pointer" />
-                                        <div class="text-center chosenPhoto" id="chosenPhoto_{{$photoData->Id}}" style="background-color:#ffffff;border:solid #86142B 2px;border-top:none">
-                                            <b style="color:#6B0D1F">Foto Utama</b>
-                                        </div>
-                                    @else
-                                        <img src="{{$photoData->Photo}}" class="photoClick" id="photoClick_{{$photoData->Id}}" style="width:100%;height:160px;cursor:pointer" />
-                                        <div class="text-center chosenPhoto" id="chosenPhoto_{{$photoData->Id}}" style="display:none;background-color:#ffffff;border:solid #86142B 2px;border-top:none">
-                                            <b style="color:#6B0D1F">Foto Utama</b>
-                                        </div>
-                                    @endif
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <btn class="btn btn-primary form-control" style="margin-top:0px;height:20px;width:30px;padding:0px;padding-left:4px"><span class="fa fa-pencil"></span></btn>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <btn class="btn btn-danger form-control" style="height:20px;width:30px;padding:0px;padding-left:4px;margin-right:0px;margin-left:7px"><span class="fa fa-trash"></span></btn>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                @if($countPhoto == 6)
-                                    <div class="row clear" style="margin-bottom:20px;"></div>
-                                    <?php $countPhoto = 0; ?>
-                                @endif
-
-                                <?php
-                                    $countPhoto++;
-
-                                    if($photoData->Selected == 1){
-                                        $selectedPhoto = $photoData->Id;
-                                    }
-                                ?>
-                            @endforeach
-
                             <div id="hiddenImageArea" style="display:none">
-                                <div class="col-md-2" style="margin-bottom:10px;">
+                                <div class="col-md-2 photoAreaSub" style="margin-bottom:10px;">
                                     <select name="photoColor[]" class="form-control">
                                         <option value="">Pilih Warna</option>
                                         @foreach($color as $color2)
@@ -91,15 +43,13 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <btn class="btn btn-primary form-control" style="margin-top:0px;height:20px;width:30px;padding:0px;padding-left:4px"><span class="fa fa-pencil"></span></btn>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <btn class="btn btn-danger form-control" style="height:20px;width:30px;padding:0px;padding-left:4px;margin-right:0px;margin-left:7px"><span class="fa fa-trash"></span></btn>
+                                        <div class="col-md-12 text-center">
+                                            <btn class="btn btn-danger form-control deletePhotoBtn" style="height:20px;width:30px;padding:0px;padding-left:4px;margin-right:0px;margin-left:7px"><span class="fa fa-trash"></span></btn>
                                         </div>
                                     </div>
                                 </div>
+
+                                <input type="hidden" class="photoPathHidden" name="photoPath[]" />
                             </div>
                         </div>
 
@@ -124,7 +74,7 @@
                     <label for="sendMaterialType" class="col-md-2 control-label">Nama Produk</label>
 
                     <div class="col-md-10">
-                        <input id="productName" name="productName" type="text" class="form-control" required value="{{$product['name']}}" />
+                        <input id="productName" name="productName" type="text" class="form-control" required />
                     </div>
                 </div>
 
@@ -136,7 +86,7 @@
                             <option value="">--- Pilih Kategori ---</option>
 
                             @foreach($category as $categoryData)
-                                <option value="{{$categoryData->Id}}" @if($product['categoryId'] == $categoryData->Id) selected @endif >{{$categoryData->Name}}</option>
+                                <option value="{{$categoryData->Id}}" >{{$categoryData->Name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -150,16 +100,14 @@
                             <option value="">--- Pilih Gender ---</option>
 
                             @foreach($gender as $genderData)
-                                <option value="{{$genderData->Id}}" @if($product['genderId'] == $genderData->Id) selected @endif >{{$genderData->Name}}</option>
+                                <option value="{{$genderData->Id}}" >{{$genderData->Name}}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-12 pull-right" style="background-color:#ffffff;margin-top:20px">
-                <div class="row clear" style=""></div>
-
+            <div class="col-md-12" style="background-color:#ffffff;margin-top:20px">
                 <div class='col-md-12'>
                     <h4 style="font-weight:bold">#Harga</h4>
                     <hr style="margin-top:-5px">
@@ -169,8 +117,8 @@
                     <label for="sendMaterialType" class="col-md-2 control-label">Harga Awal</label>
 
                     <div class="col-md-10">
-                        <input id="productPrice" type="text" class="form-control" required value="{{$product['oldPrice']}}"/>
-                        <input id="productPriceHidden" name="productPrice" type="hidden" value="{{$product['oldPrice']}}" />
+                        <input id="productPrice" type="text" class="form-control" required />
+                        <input id="productPriceHidden" name="productPrice" type="hidden" />
                     </div>
                 </div>
 
@@ -178,25 +126,73 @@
                     <label for="sendMaterialType" class="col-md-2 control-label">Diskon</label>
 
                     <div class="col-md-10">
-                        <input type="checkbox" id="productIsDiscount" name="productIsDiscount" value="1" style="margin-top:11px" @if($product['discountType'] != null) checked @endif> Ya
+                        <input type="checkbox" id="productIsDiscount" name="productIsDiscount" value="1" style="margin-top:11px"> Ya
                     </div>
                 </div>
 
-                <div class="form-group" id="discountArea">
+                <div class="form-group" id="discountArea" style="display:none">
                     <label for="sendMaterialType" class="col-md-2 control-label">Jumlah Diskon</label>
 
                     <div class="col-md-10 row">
                         <div class="col-md-8">
-                            <input type="text" class="form-control" id="productDiscountVal" @if($product['discountType'] != null) value="{{$product['discount']}}" @endif />
-                            <input type="hidden" class="form-control" name="productDiscountVal" id="productDiscountValHidden" @if($product['discountType'] != null) value="{{$product['discount']}}" @endif />
+                            <input type="text" class="form-control" id="productDiscountVal" />
+                            <input type="hidden" class="form-control" name="productDiscountVal" id="productDiscountValHidden" />
                         </div>
 
                         <div class="col-md-4">
                             <select id="productDiscountType" name="productDiscountType" class="form-control" required>
                                 @foreach($discountType as $discountType2)
-                                    <option value="{{$discountType2->Type}}" @if($product['discountType'] == $discountType2->Type) selected @endif >{{$discountType2->Type}}</option>
+                                    <option value="{{$discountType2->Id}}" >{{$discountType2->Type}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="row clear" style="margin-bottom:20px"></div>
+
+                    <label for="discountStartDt" class="col-md-2 control-label">Tanggal Mulai</label>
+
+                    <div class="col-md-4 row">
+                        <div class="col-md-12">
+                            <input type="text" id="discountStartDt" name="discountStartDt" class="form-control" placeholder="Pilih Tanggal" style="position: relative; z-index: 100" />
+                        </div>
+                    </div>
+
+                    <label for="discountStartHour" class="col-md-2 control-label">Jam</label>
+
+                    <div class="col-md-4 row">
+                        <div class="col-md-5">
+                            <input type="number" id="discountStartHour" name="discountStartHour" class="form-control" placeholder="00" value="00" />
+                        </div>
+
+                        <label for="discountStartHour" class="col-md-1 control-label">:</label>
+
+                        <div class="col-md-5">
+                            <input type="number" id="discountStartMin" name="discountStartMin" class="form-control" placeholder="00" value="00" />
+                        </div>
+                    </div>
+
+                    <div class="row clear" style="margin-bottom:20px"></div>
+
+                    <label for="discountEndDt" class="col-md-2 control-label">Tanggal Selesai</label>
+
+                    <div class="col-md-4 row">
+                        <div class="col-md-12">
+                            <input type="text" id="discountEndDt" name="discountEndDt" class="form-control" placeholder="Pilih Tanggal" style="position: relative; z-index: 100" />
+                        </div>
+                    </div>
+
+                    <label for="discountEndHour" class="col-md-2 control-label">Jam</label>
+
+                    <div class="col-md-4 row">
+                        <div class="col-md-5">
+                            <input type="number" id="discountEndHour" name="discountEndHour" class="form-control" placeholder="00" value="00" />
+                        </div>
+
+                        <label for="discountEndHour" class="col-md-1 control-label">:</label>
+
+                        <div class="col-md-5">
+                            <input type="number" id="discountEndMin" name="discountEndMin" class="form-control" placeholder="00" value="00" />
                         </div>
                     </div>
                 </div>
@@ -205,15 +201,13 @@
                     <label for="sendMaterialType" class="col-md-2 control-label">Harga Akhir</label>
 
                     <div class="col-md-10">
-                        <input id="productFinalPrice" type="text" class="form-control" required value="{{$product['newPrice']}}" disabled/>
-                        <input id="productFinalPriceHidden" name="productFinalPrice" type="hidden" value="{{$product['newPrice']}}" />
+                        <input id="productFinalPrice" type="text" class="form-control" required disabled/>
+                        <input id="productFinalPriceHidden" name="productFinalPrice" type="hidden" />
                     </div>
                 </div>
             </div>
 
             <div class="col-md-12 pull-right" style="background-color:#ffffff;margin-top:20px">
-                <div class="row clear" style=""></div>
-
                 <div class='col-md-12'>
                     <h4 style="font-weight:bold">#Deskripsi Produk</h4>
                     <hr style="margin-top:-5px">
@@ -223,7 +217,7 @@
                     <label for="sendMaterialType" class="col-md-2 control-label">Deskripsi</label>
 
                     <div class="col-md-10">
-                        <textarea id="productDescription" name="productDescription" rows="4" class="form-control" style="resize:none;" required>{{$product['description']}}</textarea>
+                        <textarea id="productDescription" name="productDescription" rows="4" class="form-control" style="resize:none;" required></textarea>
                     </div>
                 </div>
             </div>
@@ -242,16 +236,6 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-        @if($product['discountType'] == null)
-            $('#discountArea').hide();
-        @elseif($product['discountType'] == 'Price')
-            $('#productDiscountVal').priceFormat({
-                prefix: 'Rp ',
-                centsLimit: 0,
-                thousandsSeparator: '.'
-            });
-        @endif
-
         $('#productPrice, #productFinalPrice').priceFormat({
             prefix: 'Rp ',
             centsLimit: 0,
@@ -283,13 +267,13 @@
         });
 
         $('#productDiscountVal').keypress(function(event){
-            if($('#productDiscountType').val() == 'Price'){
+            if($('#productDiscountType').val() == '2'){
                 $('#productDiscountVal').priceFormat({
                     prefix: 'Rp ',
                     centsLimit: 0,
                     thousandsSeparator: '.'
                 });
-            } else if($('#productDiscountType').val() == 'Percent'){
+            } else if($('#productDiscountType').val() == '1'){
                 $('#productDiscountVal').priceFormat({
                     prefix: '',
                     centsLimit: 0,
@@ -313,11 +297,11 @@
 
             var price = $('#productPriceHidden').val();
             var discount = $('#productDiscountValHidden').val();
-            if($('#productDiscountType').val() == 'Price'){
+            if($('#productDiscountType').val() == '2'){
                 price = price - discount;
                 $('#productFinalPriceHidden').val(price);
                 $('#productFinalPrice').val(price);
-            } else if($('#productDiscountType').val() == 'Percent'){
+            } else if($('#productDiscountType').val() == '1'){
                 discount = price * discount/100;
                 price = price - discount;
                 $('#productFinalPriceHidden').val(price);
@@ -367,14 +351,22 @@
                     contentType: false,
                     processData: false,
     		        success: function(data) {
-                        console.log(data);
                         $('#hiddenImageArea .photoClick').attr('src', "{{url('/')}}/storage/app/"+data);
                         $('#hiddenImageArea .photoClick').attr('id', 'photoClick_new'+newImage);
                         $('#hiddenImageArea .chosenPhoto').attr('id', 'chosenPhoto_new'+newImage);
+                        $('#hiddenImageArea .photoPathHidden').val(data);
+                        $('#hiddenImageArea .photoPathHidden').attr('id', 'photoPathHidden'+newImage);
+                        $('#hiddenImageArea .deletePhotoBtn').attr('id', 'deletePhotoBtn'+newImage);
+                        $('#hiddenImageArea .photoAreaSub').attr('id', 'photoAreaSub'+newImage);
+
                         newImage++;
+
                         $('#imageListPreview').append($('#hiddenImageArea').html());
                         $('#hiddenImageArea .photoClick').attr('id', '');
                         $('#hiddenImageArea .chosenPhoto').attr('id', '');
+                        $('#hiddenImageArea .photoPathHidden').attr('id', '');
+                        $('#hiddenImageArea .deletePhotoBtn').attr('id', '');
+                        $('#hiddenImageArea .photoAreaSub').attr('id', '');
 
                         if(countPhoto == 6){
                             $('#imageListPreview').append('<div class="row clear" style="margin-bottom:20px;"></div>');
@@ -385,6 +377,88 @@
     		        }
     		    });
             }
+        });
+
+        $(document).on('click', ".deletePhotoBtn", function() {
+            var id = this.id;
+            id = id.substring(14);
+
+            $.ajax({
+                url: '{{ route('product.image.remove') }}',
+                method: "POST",
+                dataType: "json",
+                data: { name: $('#photoPathHidden'+id).val()},
+            });
+
+            $('#photoAreaSub'+id).remove();
+            if($('#selectedPhotoId').val() == 'new'+id){
+                $('#selectedPhotoId').val('');
+            }
+        });
+
+        $('#discountStartDt').datepicker({
+            dateFormat: 'yy-mm-dd',
+            regional: 'id',
+            orientation: "auto",
+            minDate : 'now',
+            changeYear: true,
+            onClose: function() {
+                $("#discountEndDt").datepicker(
+                        "change",
+                        { minDate: new Date($('#discountStartDt').val()) }
+                );
+            }
+        });
+
+        $('#discountEndDt').datepicker({
+            dateFormat: 'yy-mm-dd',
+            regional: 'id',
+            orientation: "auto",
+            minDate : 'now',
+            changeYear: true,
+            onClose: function() {
+                $("#discountStartDt").datepicker(
+                        "change",
+                        { maxDate: new Date($('#discountEndDt').val()) }
+                );
+            }
+        });
+
+        // $('#discountStartHour, #discountStartMin').change(function(){
+        //     if($(this).val() == '' || parseInt($(this).val()) < 0){
+        //         $(this).val('00');
+        //     }
+        // });
+
+        $("#discountStartHour, #discountStartMin").keypress(function (e) {
+            if (e.which < 48 || 57 < e.which)
+                e.preventDefault();
+        });
+
+        $("#discountStartHour").change(function (e) {
+            if($(this).val() < 0){
+                $(this).val('00');
+            } else if($(this).val() > 24){
+                $(this).val('1');
+            }
+        });
+
+        $("#discountStartMin, #discountEndHour").change(function (e) {
+            if($(this).val() < 0){
+                $(this).val('00');
+            } else if($(this).val() > 59){
+                $(this).val('1');
+            }
+        });
+
+        $("#discountStartMin, #discountEndMin").change(function (e) {
+            if($.isNumeric($('#discountStartMin').val()) === false){
+                $(this).val('00');
+            }
+        });
+
+        $('#discountStartHour, #discountStartMin, #discountEndHour, #discountEndMin').click(function(){
+            $(this).select();
         });
 	});
 </script>

@@ -32,6 +32,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/product/image/upload', 'ProductController@imageUpload')->name('product.image.upload');
     Route::post('/product/image/remove', 'ProductController@remove')->name('product.image.remove');
 
+    Route::get('/stock/list', 'StockController@list')->name('stock.list');
+
     Route::get('/config/category', 'ConfigController@category');
     Route::get('/config/category/get', 'ConfigController@getCategory')->name('config.category.get');
     Route::post('/config/category/add', 'ConfigController@addCategory')->name('config.category.add');
