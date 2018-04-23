@@ -167,4 +167,91 @@ class ConfigController extends Controller
             return 'error';
         }
     }
+
+    public function bankAccount(Request $request){
+        $client = new Client;
+
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/bank-list/get');
+        $responseData = json_decode($response->getBody()->getContents());
+
+        $bankList = array();
+        if($responseData->isError == false){
+            $bankList = $responseData->isResponse->data;
+        } else{
+            return 'error';
+        }
+
+        $data = array(
+            'bankList' => $bankList
+        );
+
+        return view('config.bank-account', $data);
+    }
+
+    public function getBankAccount(Request $request){
+        $client = new Client;
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/bank-account/get', [
+            'query' => ['owner' => env('OWNER_ID', 1)]
+        ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            $bankAccount = $responseData->isResponse->data;
+
+            return Datatables::of($bankAccount)->make(true);
+        } else{
+            return 'error';
+        }
+    }
+
+    public function addBankAccount(Request $request){
+        $userData = session('user');
+
+        $client = new Client;
+        $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/bank-account/add', [
+                'query' => [
+                    'owner' => env('OWNER_ID', 1),
+                    'adminId' => $userData['id'],
+                    'accountName' => $request->accountName,
+                    'accountNumber' => $request->accountNumber,
+                    'bankId' => $request->bank,
+                    'accountBranch' => $request->accountBranch
+                ]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            return redirect('/config/bank-account')->with('success', $responseData->message);
+        } else{
+            return redirect('/config/bank-account')->with('error', $responseData->message);
+        }
+    }
+
+    public function editBankAccount(Request $request){
+        $client = new Client;
+        $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/bank-account/edit', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'categoryId' => $request->categoryId, 'category' => $request->category]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            return redirect('/config/category')->with('success', 'Sukses mengubah kategori');
+        } else{
+            return redirect('/config/category')->with('error', 'Gagal mengubah kategori');
+        }
+    }
+
+    public function deleteBankAccount(Request $request){
+        $client = new Client;
+        $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/bank-account/delete', [
+                'query' => ['owner' => env('OWNER_ID', 1), 'categoryId' => $request->categoryId]
+            ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            return redirect('/config/category')->with('success', 'Sukses menghapus kategori');
+        } else{
+            return redirect('/config/category')->with('error', 'Gagal menghapus kategori');
+        }
+    }
 }
