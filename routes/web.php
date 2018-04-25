@@ -34,6 +34,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/stock/list', 'StockController@list')->name('stock.list');
 
+    Route::get('/config/info', 'ConfigController@info');
+    Route::get('/config/info/get', 'ConfigController@getInfo')->name('config.info.get');
+    Route::post('/config/info/edit', 'ConfigController@editInfo')->name('config.info.edit');
+
     Route::get('/config/bank-account', 'ConfigController@bankAccount');
     Route::get('/config/bank-account/get', 'ConfigController@getBankAccount')->name('config.bankAccount.get');
     Route::post('/config/bank-account/add', 'ConfigController@addBankAccount')->name('config.bankAccount.add');

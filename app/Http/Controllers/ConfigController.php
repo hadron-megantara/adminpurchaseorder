@@ -168,6 +168,42 @@ class ConfigController extends Controller
         }
     }
 
+    public function info(Request $request){
+        $client = new Client;
+
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/bank-list/get');
+        $responseData = json_decode($response->getBody()->getContents());
+
+        $bankList = array();
+        if($responseData->isError == false){
+            $bankList = $responseData->isResponse->data;
+        } else{
+            return 'error';
+        }
+
+        $data = array(
+            'bankList' => $bankList
+        );
+
+        return view('config.bank-account', $data);
+    }
+
+    public function getInfo(Request $request){
+        $client = new Client;
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/bank-account/get', [
+            'query' => ['owner' => env('OWNER_ID', 1)]
+        ]);
+        $responseData = json_decode($response->getBody()->getContents());
+
+        if($responseData->isError == false){
+            $bankAccount = $responseData->isResponse->data;
+
+            return Datatables::of($bankAccount)->make(true);
+        } else{
+            return 'error';
+        }
+    }
+
     public function bankAccount(Request $request){
         $client = new Client;
 
