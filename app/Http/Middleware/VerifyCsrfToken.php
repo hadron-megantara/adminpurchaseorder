@@ -16,5 +16,7 @@ class VerifyCsrfToken extends Middleware
         'product/detail/remove-file',
         'product/image/upload',
         'product/image/remove',
+        'config/info/logo/upload',
+        'config/info/logo/remove',
     ];
 }

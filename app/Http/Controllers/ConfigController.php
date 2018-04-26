@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use DataTables;
+use Session;
+use Illuminate\Support\Facades\Storage;
 
 class ConfigController extends Controller
 {
@@ -171,37 +173,96 @@ class ConfigController extends Controller
     public function info(Request $request){
         $client = new Client;
 
-        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/bank-list/get');
-        $responseData = json_decode($response->getBody()->getContents());
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/owner/get', [
+            'query' => ['owner' => env('OWNER_ID', 1)]
+        ]);
 
-        $bankList = array();
-        if($responseData->isError == false){
-            $bankList = $responseData->isResponse->data;
-        } else{
-            return 'error';
+        $responseData = json_decode($response->getBody()->getContents());
+        $owner = $responseData->isResponse->data;
+
+        $successMessage = null;
+
+        if(Session::has('success')){
+            $successMessage = session('success');
         }
 
         $data = array(
-            'bankList' => $bankList
+            'owner' => $owner,
+            'success' => $successMessage
         );
 
-        return view('config.bank-account', $data);
+        return view('config.info', $data);
     }
 
-    public function getInfo(Request $request){
+    public function editInfo(Request $request){
+        $upload = false;
         $client = new Client;
-        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/bank-account/get', [
-            'query' => ['owner' => env('OWNER_ID', 1)]
-        ]);
+
+        if($request->has('logoPath') && $request->logoPath != ''){
+            $upload = true;
+            $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/owner/edit', [
+                'multipart' => [
+                    [
+                        'name'     => 'owner',
+                        'contents' => env('OWNER_ID', 1)
+                    ],
+                    [
+                        'name'     => 'name',
+                        'contents' => $request->companyName
+                    ],
+                    [
+                        'name'     => 'address',
+                        'contents' => $request->companyAddress
+                    ],
+                    [
+                        'name'     => 'phone',
+                        'contents' => $request->companyPhone
+                    ],
+                    [
+                        'name'     => 'file',
+                        'contents' => fopen('storage/app/'.$request->logoPath, 'r+')
+                    ],
+                ]
+            ]);
+        } else{
+            $response = $client->request('POST', env('API_URL', 'http://192.168.1.101:212/api/v1/').'config/owner/edit', [
+                'query' => [
+                    'owner' => env('OWNER_ID', 1),
+                    'name' => $request->companyName,
+                    'address' => $request->companyAddress,
+                    'phone' => $request->companyPhone
+                ]
+            ]);
+
+        }
+
         $responseData = json_decode($response->getBody()->getContents());
 
         if($responseData->isError == false){
-            $bankAccount = $responseData->isResponse->data;
+            $messageInfo = $responseData->message;
 
-            return Datatables::of($bankAccount)->make(true);
-        } else{
-            return 'error';
+            if($upload){
+                $filename = $request->logoPath;
+                Storage::delete($filename);
+            }
+
+            return redirect('config/info')->with('success', $messageInfo);
         }
+    }
+
+    public function uploadLogo(Request $request){
+        if($request->file('file')->isValid()){
+            $uploadedFile = $request->file('file');
+            $uploadedFile = $uploadedFile->store('images/temp');
+            echo $uploadedFile;die;
+        }
+    }
+
+    public function removeLogo(Request $request){
+        $filename = $request->name;
+
+        Storage::delete($filename);
+        die;
     }
 
     public function bankAccount(Request $request){

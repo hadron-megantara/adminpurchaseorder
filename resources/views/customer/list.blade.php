@@ -5,7 +5,7 @@
 <div class="page-content">
     <div class="content">
         <div class="page-title">
-            <h3>List Customer</h3>
+            <h3>Daftar Pelanggan</h3>
         </div>
 
         <div class="col-md-12" style="background-color:#ffffff;padding-top:30px">

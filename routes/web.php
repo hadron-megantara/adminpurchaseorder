@@ -33,10 +33,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/product/image/remove', 'ProductController@remove')->name('product.image.remove');
 
     Route::get('/stock/list', 'StockController@list')->name('stock.list');
+    Route::get('/stock/list/get', 'StockController@getList')->name('stock.list.get');
+    Route::post('/stock/add', 'StockController@add')->name('stock.add');
+
+    Route::get('/order/detail/{id}', 'OrderController@detail')->name('order.detail');
+    Route::post('/order/detail/{id}/update', 'OrderController@updateOrder');
+    Route::get('/order/list', 'OrderController@list')->name('order.list');
+    Route::get('/order/list/get', 'OrderController@getList')->name('order.list.get');
 
     Route::get('/config/info', 'ConfigController@info');
     Route::get('/config/info/get', 'ConfigController@getInfo')->name('config.info.get');
     Route::post('/config/info/edit', 'ConfigController@editInfo')->name('config.info.edit');
+    Route::post('/config/info/logo/upload', 'ConfigController@uploadLogo')->name('config.info.logo.upload');
+    Route::post('/config/info/logo/remove', 'ConfigController@removeLogo')->name('config.info.logo.remove');
 
     Route::get('/config/bank-account', 'ConfigController@bankAccount');
     Route::get('/config/bank-account/get', 'ConfigController@getBankAccount')->name('config.bankAccount.get');

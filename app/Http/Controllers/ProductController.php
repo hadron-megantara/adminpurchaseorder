@@ -41,7 +41,7 @@ class ProductController extends Controller
             $search = $search['value'];
         }
 
-        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'product/list', [
+        $response = $client->request('GET', env('API_URL', 'http://192.168.1.101:212/api/v1/').'product/list/admin', [
                 'query' => ['owner' => env('OWNER_ID', 1), 'limit' => $limit, 'limitStart' => $limitStart, 'name' => $search]
             ]);
         $responseData = json_decode($response->getBody()->getContents());
@@ -152,6 +152,10 @@ class ProductController extends Controller
         for($i=1;$i<count($request->photoPath);$i++){
             $selected = 0;
             if(str_replace('new', '', $request->selectedPhotoId) == $i){
+                $selected = 1;
+            }
+
+            if($request->selectedPhotoId == null && $i == 1){
                 $selected = 1;
             }
 

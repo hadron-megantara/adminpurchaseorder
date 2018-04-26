@@ -31,11 +31,11 @@
             			<tr>
             				<th>Nama Produk</th>
                             <th>Kategori</th>
-            				<th>Deskripsi</th>
+            				<th style="width:200px">Deskripsi</th>
                             <th>Diskon</th>
                             <th>Harga Awal</th>
                             <th>Harga Akhir</th>
-                            <th>Aksi</th>
+                            <th style="width:60px">Aksi</th>
             			</tr>
             		</thead>
             		<tbody>
