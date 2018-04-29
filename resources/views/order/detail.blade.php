@@ -236,7 +236,7 @@
                             <label style="margin-top:5px;font-size:16px"><strong>{{$product->productName}}</strong></label>
                             <label><strong>Warna :</strong> {{$product->productColor}}</label>
                             <label><strong>Ukuran :</strong> {{$product->productSize}}</label>
-                            <label><strong>Jumlah :</strong> {{$product->productColor}}</label>
+                            <label><strong>Jumlah :</strong> {{$product->productTotal}}</label>
                             <label><strong>Harga /pcs :</strong> Rp {{number_format($product->productPrice,0,",",".")}}</label>
                             <label><strong>Harga Total :</strong> Rp {{number_format($product->productTotalPrice,0,",",".")}}</label>
                         </div>
