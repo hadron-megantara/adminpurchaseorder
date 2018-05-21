@@ -76,3 +76,6 @@ Route::get('/login', 'Auth\LoginController@index')->name('auth.login');
 Route::post('/login', 'Auth\LoginController@loginProcess')->name('auth.login.process');
 Route::post('/logout', 'Auth\LoginController@logOut')->name('auth.logout');
 Route::get('/password/reset', 'Auth\ForgotPasswordController@index')->name('password.request');
+
+Route::get('/testing', 'TestingController@index')->name('testing');
+Route::get('/testing/order', 'TestingController@getOrder')->name('testing.order');
